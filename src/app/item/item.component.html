@@ -1,0 +1,40 @@
+<div class="item">
+    <!-- input is a checkbox so users can check off items when an item is complete -->
+    <input
+      [id]="item.description"
+      type="checkbox"
+      (change)="item.done = !item.done"
+      [checked]="item.done" />
+      <!-- uses {{item.description}} to retrieve the description of the current item from the items array. -->
+    <label [for]="item.description">{{item.description}}</label>
+  
+    <!--  dynamically change the structure of the DOM. This *ngIf means that if editable is false, this <div> is in the DOM. 
+    If editable is true, Angular removes this <div> from the DOM. -->
+    <div class="btn-wrapper" *ngIf="!editable">
+      <button class="btn" (click)="editable = !editable">Edit</button>
+      <button class="btn btn-warn" (click)="remove.emit()">Delete</button>
+    </div>
+  
+    <!-- This section shows only if user clicks Edit button -->
+    <div *ngIf="editable">
+    <!-- the value of the <input> is bound to the description of the current item. 
+    #editedItem, on the <input> means that Angular stores whatever a user types in this <input> in a variable called editedItem.
+    The keyup event calls the saveItem() method and passes in the editedItem value if the user chooses to press enter instead of click Save. -->
+      <input
+        class="sm-text-input"
+        placeholder="edit item"
+        [value]="item.description" 
+        #editedItem
+        (keyup.enter)="saveItem(editedItem.value)" />
+    <!-- saveItem() method takes the value from the #editedItem element and changes the item's description to editedItem.value string. -->
+    
+    <!-- when the user clicks the Cancel button, editable toggles to false. When its false, the Edit & Delete button are restored on the DOM-->
+      <div class="btn-wrapper">
+        <button class="btn" (click)="editable = !editable">Cancel</button>
+        <button class="btn btn-save" (click)="saveItem(editedItem.value)">
+          Save
+        </button>
+      </div>
+    </div>
+</div>
+  
